@@ -16,8 +16,10 @@ Ue01UI = (function() {
     this.rangeElement = document.getElementById("threshold_range");
     this.rangeLabel = document.getElementById("range_label");
     this.selectElement = document.getElementById("binarize_mode");
+    this.outlineCheckbox = document.getElementById("outline_cb");
     this.binarizer = new Binarizer();
     this.binarizeMethod = "Threshold";
+    this.outliner = new Outliner();
   }
   Ue01UI.prototype.init = function() {
     Ue01UI.__super__.init.call(this);
@@ -41,7 +43,7 @@ Ue01UI = (function() {
     }, this));
   };
   Ue01UI.prototype.updateImage = function(image) {
-    var ctx, imageData, newPixels, pixels;
+    var ctx, imageData, newPixels, newpixels, pixels;
     this.canvasHelper.adjustSize(image);
     this.canvasHelper.drawImage(image);
     ctx = this.canvasElement.getContext("2d");
@@ -54,6 +56,10 @@ Ue01UI = (function() {
       case "Iso-Data":
         newPixels = this.binarizer.binarizeByIsoDataAlgo(pixels);
         this.rangeElement.value = this.binarizer.threshold;
+    }
+    if (this.outlineCheckbox.checked === true) {
+      newpixels = this.outliner.calculateOutline(pixels);
+      console.log("TODO: implement outline");
     }
     this.rangeLabel.innerHTML = parseInt(this.binarizer.threshold, 10);
     imageData.data = newPixels;

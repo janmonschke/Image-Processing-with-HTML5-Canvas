@@ -8,8 +8,10 @@ class Ue01UI extends BaseUI
     @rangeElement = document.getElementById("threshold_range")
     @rangeLabel = document.getElementById("range_label")
     @selectElement = document.getElementById("binarize_mode")
+    @outlineCheckbox = document.getElementById("outline_cb")
     @binarizer = new Binarizer()
     @binarizeMethod = "Threshold"
+    @outliner = new Outliner()
     
   init : ->
     super()
@@ -43,6 +45,10 @@ class Ue01UI extends BaseUI
       when "Iso-Data"  
         newPixels = @binarizer.binarizeByIsoDataAlgo(pixels)
         @rangeElement.value = @binarizer.threshold
+    
+    if @outlineCheckbox.checked == true
+      newpixels = @outliner.calculateOutline(pixels)
+      console.log "TODO: implement outline"
     
     @rangeLabel.innerHTML = parseInt(@binarizer.threshold, 10)
     
