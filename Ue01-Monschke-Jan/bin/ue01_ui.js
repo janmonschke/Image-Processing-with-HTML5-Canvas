@@ -14,6 +14,7 @@ Ue01UI = (function() {
   function Ue01UI() {
     Ue01UI.__super__.constructor.call(this);
     this.rangeElement = document.getElementById("threshold_range");
+    this.rangeLabel = document.getElementById("range_label");
     this.selectElement = document.getElementById("binarize_mode");
     this.binarizer = new Binarizer();
     this.binarizeMethod = "Threshold";
@@ -54,6 +55,7 @@ Ue01UI = (function() {
         newPixels = this.binarizer.binarizeByIsoDataAlgo(pixels);
         this.rangeElement.value = this.binarizer.threshold;
     }
+    this.rangeLabel.innerHTML = parseInt(this.binarizer.threshold, 10);
     imageData.data = newPixels;
     return this.canvasHelper.putImageData(imageData);
   };

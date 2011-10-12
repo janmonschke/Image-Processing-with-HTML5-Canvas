@@ -6,6 +6,7 @@ class Ue01UI extends BaseUI
   constructor : ->
     super()
     @rangeElement = document.getElementById("threshold_range")
+    @rangeLabel = document.getElementById("range_label")
     @selectElement = document.getElementById("binarize_mode")
     @binarizer = new Binarizer()
     @binarizeMethod = "Threshold"
@@ -42,6 +43,8 @@ class Ue01UI extends BaseUI
       when "Iso-Data"  
         newPixels = @binarizer.binarizeByIsoDataAlgo(pixels)
         @rangeElement.value = @binarizer.threshold
+    
+    @rangeLabel.innerHTML = parseInt(@binarizer.threshold, 10)
     
     imageData.data = newPixels
     @canvasHelper.putImageData(imageData)
