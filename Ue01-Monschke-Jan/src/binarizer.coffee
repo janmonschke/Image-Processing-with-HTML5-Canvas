@@ -22,36 +22,39 @@ class Binarizer
   
   binarizeByIsoDataAlgo : (pixels) ->
     # set start threshold
-    @threshold = @oldThreshold = 128
-    @runCount = 0
+    @threshold = 128
     @grayScaleHistogram = new Histogram(pixels).generateGrayscaleHistogram()
-    @threshold = @calculateIsoDataThreshold()
+
+    @threshold = @calculateIsoDataThreshold(0, 128, 128)
     return @binarizeByThreshold(pixels)
     
-  calculateIsoDataThreshold : ->
-    unless @runCount++ >= @maxRuns or @newThreshold == @oldThreshold
+  calculateIsoDataThreshold : (runCount, oldT, newT) ->
+    # stop when max number of runs has been reached or there was no change in the last calculation
+    unless runCount++ >= @maxRuns or (runCount > 1 and oldT == newT)
+      
+      # calculate both weight points
+      m1 = @calculateClusterWeight(0, parseInt(newT, 10)-1)
+      m2 = @calculateClusterWeight(parseInt(newT, 10), 255)
+
       # buffer the old value
-      @oldThreshold = @newThreshold
+      oldT = newT
       
-      pa = 0
-      pa2 = 0
-      for j in [0..@threshold-1]
-        pa += @grayScaleHistogram[j]
-        pa2 += j * @grayScaleHistogram[j]
+      # calbulate arithmetic average of both points
+      newT = (m1 + m2) / 2
       
-      m1 = pa2 / pa
-      
-      pb = 0
-      pb2 = 0
-      for i in [@threshold..255]
-        pb += @grayScaleHistogram[i]
-        pb2 += i * @grayScaleHistogram[i]
-      
-      m2 = pb2 / pb
-      
-      @newThreshold = (m1 + m2) / 2
-      
-      @calculateIsoDataThreshold()
+      # recursively go on calculating
+      @calculateIsoDataThreshold(runCount, oldT, newT)
     else
-      console.log "Isodata result: #{@newThreshold} after #{@runCount} runs"
-      return @newThreshold
+      console.log "Isodata result: #{newT} after #{runCount-1} runs"
+      return newT
+      
+  calculateClusterWeight : (from, to) ->
+    p = 0
+    p2 = 0
+    # sum up the values
+    for j in [from..to]
+      p += @grayScaleHistogram[j]
+      p2 += j * @grayScaleHistogram[j]
+      
+    # return the weight or zero to prevent division by zero
+    return if p != 0 then p2 / p else 0

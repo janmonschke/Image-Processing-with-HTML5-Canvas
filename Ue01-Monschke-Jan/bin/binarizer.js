@@ -24,35 +24,36 @@ Binarizer = (function() {
     return pixels;
   };
   Binarizer.prototype.binarizeByIsoDataAlgo = function(pixels) {
-    this.threshold = this.oldThreshold = 128;
-    this.runCount = 0;
+    this.threshold = 128;
     this.grayScaleHistogram = new Histogram(pixels).generateGrayscaleHistogram();
-    this.threshold = this.calculateIsoDataThreshold();
+    this.threshold = this.calculateIsoDataThreshold(0, 128, 128);
     return this.binarizeByThreshold(pixels);
   };
-  Binarizer.prototype.calculateIsoDataThreshold = function() {
-    var i, j, m1, m2, pa, pa2, pb, pb2, _ref, _ref2;
-    if (!(this.runCount++ >= this.maxRuns || this.newThreshold === this.oldThreshold)) {
-      this.oldThreshold = this.newThreshold;
-      pa = 0;
-      pa2 = 0;
-      for (j = 0, _ref = this.threshold - 1; (0 <= _ref ? j <= _ref : j >= _ref); (0 <= _ref ? j += 1 : j -= 1)) {
-        pa += this.grayScaleHistogram[j];
-        pa2 += j * this.grayScaleHistogram[j];
-      }
-      m1 = pa2 / pa;
-      pb = 0;
-      pb2 = 0;
-      for (i = _ref2 = this.threshold; (_ref2 <= 255 ? i <= 255 : i >= 255); (_ref2 <= 255 ? i += 1 : i -= 1)) {
-        pb += this.grayScaleHistogram[i];
-        pb2 += i * this.grayScaleHistogram[i];
-      }
-      m2 = pb2 / pb;
-      this.newThreshold = (m1 + m2) / 2;
-      return this.calculateIsoDataThreshold();
+  Binarizer.prototype.calculateIsoDataThreshold = function(runCount, oldT, newT) {
+    var m1, m2;
+    if (!(runCount++ >= this.maxRuns || (runCount > 1 && oldT === newT))) {
+      m1 = this.calculateClusterWeight(0, parseInt(newT, 10) - 1);
+      m2 = this.calculateClusterWeight(parseInt(newT, 10), 255);
+      oldT = newT;
+      newT = (m1 + m2) / 2;
+      return this.calculateIsoDataThreshold(runCount, oldT, newT);
     } else {
-      console.log("Isodata result: " + this.newThreshold + " after " + this.runCount + " runs");
-      return this.newThreshold;
+      console.log("Isodata result: " + newT + " after " + (runCount - 1) + " runs");
+      return newT;
+    }
+  };
+  Binarizer.prototype.calculateClusterWeight = function(from, to) {
+    var j, p, p2;
+    p = 0;
+    p2 = 0;
+    for (j = from; (from <= to ? j <= to : j >= to); (from <= to ? j += 1 : j -= 1)) {
+      p += this.grayScaleHistogram[j];
+      p2 += j * this.grayScaleHistogram[j];
+    }
+    if (p !== 0) {
+      return p2 / p;
+    } else {
+      return 0;
     }
   };
   return Binarizer;
