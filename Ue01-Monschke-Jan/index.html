@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Threshold, Data-Iso Algo, Outline - Ue01-Monschke-Jan</title>
+  <link rel="stylesheet" href="style/main.css" type="text/css" media="screen">
+  <script src="lib/html5-slider.js"></script>
+  
+  <script src="bin/canvas_helper.js"></script>
+  
+  <script src="bin/converter.js"></script>
+  <script src="bin/histogram.js"></script>
+  <script src="bin/binarizer.js"></script>
+  
+  <script src="bin/base_ui.js"></script>
+  <script src="bin/ue01_ui.js"></script>
+  
+  
+  <script src="bin/main.js"></script>
+</head>
+<body>
+  <input type="range" id="threshold_range" min="0" max="255">
+  <input type="file" id="file_chooser" />
+  <img src="tools1.png" id="original_image" />
+  <select id="binarize_mode">
+    <option>Threshold</option>
+    <option>Iso-Data</option>
+  </select>
+  <canvas></canvas>
+</body>
+</html>
