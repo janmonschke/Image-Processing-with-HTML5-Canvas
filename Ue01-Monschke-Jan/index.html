@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Threshold, Data-Iso Algo, Outline - Ue01-Monschke-Jan</title>
+  <link rel="stylesheet" href="style/base.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="style/skeleton.css" type="text/css" media="screen">
   <link rel="stylesheet" href="style/main.css" type="text/css" media="screen">
   <script src="lib/html5-slider.js"></script>
   
@@ -20,13 +22,20 @@
   <script src="bin/main.js"></script>
 </head>
 <body>
-  <input type="range" id="threshold_range" min="0" max="255">
-  <input type="file" id="file_chooser" />
+  <div id="tools">
+    <input type="range" id="threshold_range" min="0" max="255">
+    <label for="threshold_range" id="range_label">128</label>
+
+    <input type="file" id="file_chooser" />
+    <label for="outline_cb">Outline</label>
+    <input type="checkbox" id="outline_cb" />
+    <select id="binarize_mode">
+      <option id="threshold_opt">Threshold</option>
+      <option id="isodata_opt">Iso-Data</option>
+    </select>
+
+  </div>
   <img src="tools1.png" id="original_image" />
-  <select id="binarize_mode">
-    <option id="threshold_opt">Threshold</option>
-    <option id="isodata_opt">Iso-Data</option>
-  </select>
   <canvas></canvas>
 </body>
 </html>

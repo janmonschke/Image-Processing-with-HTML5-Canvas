@@ -1,0 +1,17 @@
+body{
+    padding-top: 60px;
+}
+
+label, select{
+    display: inline-block;
+}
+
+#tools{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    padding: 10px;
+    background-color: rgba(100, 100, 100, .4);
+}
