@@ -26,6 +26,10 @@ Ue01UI = (function() {
   Ue01UI.prototype.initRangeEvents = function() {
     return this.rangeElement.addEventListener("change", __bind(function(ev) {
       this.binarizer.setThreshold(ev.target.value);
+      if (document.getElementById("isodata_opt").selected === true) {
+        document.getElementById("threshold_opt").selected = true;
+        this.binarizeMethod = "Threshold";
+      }
       return this.updateImage(this.imageElement);
     }, this));
   };
@@ -48,8 +52,8 @@ Ue01UI = (function() {
         break;
       case "Iso-Data":
         newPixels = this.binarizer.binarizeByIsoDataAlgo(pixels);
+        this.rangeElement.value = this.binarizer.threshold;
     }
-    this.rangeElement.value = this.binarizer.threshold;
     imageData.data = newPixels;
     return this.canvasHelper.putImageData(imageData);
   };

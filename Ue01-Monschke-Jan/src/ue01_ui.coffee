@@ -18,6 +18,9 @@ class Ue01UI extends BaseUI
   initRangeEvents : ->
     @rangeElement.addEventListener "change", (ev) =>
       @binarizer.setThreshold(ev.target.value)
+      if document.getElementById("isodata_opt").selected == true
+        document.getElementById("threshold_opt").selected = true
+        @binarizeMethod = "Threshold"
       @updateImage(@imageElement)
   
   initSelectEvents : ->
