@@ -34,11 +34,11 @@ class Ue01UI extends BaseUI
     pixels = imageData.data
     
     switch @binarizeMethod
-      when "Threshold" then newPixels = @binarizer.binarizeByThreshold(pixels)
-      when "Iso-Data" then newPixels = @binarizer.binarizeByIsoDataAlgo(pixels)
-    
-    # update the range element's value
-    @rangeElement.value = @binarizer.threshold
+      when "Threshold"
+        newPixels = @binarizer.binarizeByThreshold(pixels)
+      when "Iso-Data"  
+        newPixels = @binarizer.binarizeByIsoDataAlgo(pixels)
+        @rangeElement.value = @binarizer.threshold
     
     imageData.data = newPixels
     @canvasHelper.putImageData(imageData)
