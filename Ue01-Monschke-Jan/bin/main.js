@@ -1,3 +1,9 @@
+var console;
+if (typeof console === "undefined") {
+  console = {
+    log: function() {}
+  };
+}
 window.addEventListener("load", function() {
   var filterUi;
   filterUi = new Ue01UI();

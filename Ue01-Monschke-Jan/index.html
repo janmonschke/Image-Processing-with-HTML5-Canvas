@@ -13,6 +13,7 @@
   
   <script src="bin/converter.js"></script>
   <script src="bin/histogram.js"></script>
+  <script src="bin/basic_image_manipulator.js"></script>
   <script src="bin/binarizer.js"></script>
   <script src="bin/outliner.js"></script>
   
@@ -28,12 +29,13 @@
     <label for="threshold_range" id="range_label">128</label>
 
     <input type="file" id="file_chooser" />
-    <label for="outline_cb">Outline</label>
+    <label for="outline_cb">Invert</label>
     <input type="checkbox" id="outline_cb" />
     <select id="binarize_mode">
       <option id="threshold_opt">Threshold</option>
       <option id="isodata_opt">Iso-Data</option>
     </select>
+    <span id="render_time">Rendered in 0ms</span>
 
   </div>
   <img src="tools1.png" id="original_image" />

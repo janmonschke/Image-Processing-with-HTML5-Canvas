@@ -26,6 +26,7 @@ Binarizer = (function() {
   Binarizer.prototype.binarizeByIsoDataAlgo = function(pixels) {
     this.threshold = 128;
     this.grayScaleHistogram = new Histogram(pixels).generateGrayscaleHistogram();
+    console.log("hist: ", this.grayScaleHistogram[3], this.grayScaleHistogram[70]);
     this.threshold = this.calculateIsoDataThreshold(0, 128, 128);
     return this.binarizeByThreshold(pixels);
   };
@@ -34,8 +35,10 @@ Binarizer = (function() {
     if (!(runCount++ >= this.maxRuns || (runCount > 1 && oldT === newT))) {
       m1 = this.calculateClusterWeight(0, parseInt(newT, 10) - 1);
       m2 = this.calculateClusterWeight(parseInt(newT, 10), 255);
+      console.log(m1 + " " + m2);
       oldT = newT;
       newT = (m1 + m2) / 2;
+      console.log(runCount + " " + oldT + " " + newT);
       return this.calculateIsoDataThreshold(runCount, oldT, newT);
     } else {
       console.log("Isodata result: " + newT + " after " + (runCount - 1) + " runs");

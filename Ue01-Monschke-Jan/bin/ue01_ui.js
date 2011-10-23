@@ -17,6 +17,7 @@ Ue01UI = (function() {
     this.rangeLabel = document.getElementById("range_label");
     this.selectElement = document.getElementById("binarize_mode");
     this.outlineCheckbox = document.getElementById("outline_cb");
+    this.timeSpanElement = document.getElementById("render_time");
     this.binarizer = new Binarizer();
     this.binarizeMethod = "Threshold";
     this.outliner = new Outliner();
@@ -24,7 +25,8 @@ Ue01UI = (function() {
   Ue01UI.prototype.init = function() {
     Ue01UI.__super__.init.call(this);
     this.initRangeEvents();
-    return this.initSelectEvents();
+    this.initSelectEvents();
+    return this.initCheckboxEvents();
   };
   Ue01UI.prototype.initRangeEvents = function() {
     return this.rangeElement.addEventListener("change", __bind(function(ev) {
@@ -42,8 +44,14 @@ Ue01UI = (function() {
       return this.updateImage(this.imageElement);
     }, this));
   };
+  Ue01UI.prototype.initCheckboxEvents = function() {
+    return this.outlineCheckbox.addEventListener("change", __bind(function(ev) {
+      return this.updateImage(this.imageElement);
+    }, this));
+  };
   Ue01UI.prototype.updateImage = function(image) {
-    var ctx, imageData, newPixels, newpixels, pixels;
+    var ctx, id1, id2, imageData, newPixels, newpixels, pixels, startTime;
+    startTime = new Date().getTime();
     this.canvasHelper.adjustSize(image);
     this.canvasHelper.drawImage(image);
     ctx = this.canvasElement.getContext("2d");
@@ -57,13 +65,17 @@ Ue01UI = (function() {
         newPixels = this.binarizer.binarizeByIsoDataAlgo(pixels);
         this.rangeElement.value = this.binarizer.threshold;
     }
-    if (this.outlineCheckbox.checked === true) {
-      newpixels = this.outliner.calculateOutline(pixels);
-      console.log("TODO: implement outline");
-    }
     this.rangeLabel.innerHTML = parseInt(this.binarizer.threshold, 10);
     imageData.data = newPixels;
-    return this.canvasHelper.putImageData(imageData);
+    this.canvasHelper.putImageData(imageData);
+    if (this.outlineCheckbox.checked === true) {
+      id1 = ctx.getImageData(0, 0, image.width, image.height);
+      id2 = ctx.getImageData(0, 0, image.width, image.height);
+      newpixels = this.outliner.calculateOutline(id1.data, id2.data, image.width, image.height);
+      id1.data = newpixels;
+      this.canvasHelper.putImageData(id1);
+    }
+    return this.timeSpanElement.innerHTML = "Rendered in: " + (new Date().getTime() - startTime) + "ms";
   };
   return Ue01UI;
 })();

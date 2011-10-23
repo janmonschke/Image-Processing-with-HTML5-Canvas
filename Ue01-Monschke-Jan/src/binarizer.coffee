@@ -24,7 +24,7 @@ class Binarizer
     # set start threshold
     @threshold = 128
     @grayScaleHistogram = new Histogram(pixels).generateGrayscaleHistogram()
-
+    console.log "hist: ", @grayScaleHistogram[3], @grayScaleHistogram[70]
     @threshold = @calculateIsoDataThreshold(0, 128, 128)
     return @binarizeByThreshold(pixels)
     
@@ -35,12 +35,16 @@ class Binarizer
       # calculate both weight points
       m1 = @calculateClusterWeight(0, parseInt(newT, 10)-1)
       m2 = @calculateClusterWeight(parseInt(newT, 10), 255)
-
+      
+      console.log( m1 + " " + m2)
+      
       # buffer the old value
       oldT = newT
       
       # calbulate arithmetic average of both points
       newT = (m1 + m2) / 2
+      
+      console.log(runCount + " " + oldT + " " + newT) 
       
       # recursively go on calculating
       @calculateIsoDataThreshold(runCount, oldT, newT)
